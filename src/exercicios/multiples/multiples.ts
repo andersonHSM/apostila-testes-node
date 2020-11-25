@@ -1,16 +1,8 @@
-export const isMultipleOf3Or5 = (index: number) => {
-  return index % 3 === 0 || index % 5 === 0;
-};
+import isMultipleOf3And5 from "./is-multiple-of-three-and-five";
+import isMultipleOf3Or5 from "./is-multiple-of-three-or-five";
+import isMultipleOf3Or5And7 from "./is-multiple-of-three-or-five-and-seven";
 
-export const isMultipleOf3And5 = (index: number) => {
-  return index % 3 === 0 && index % 5 === 0;
-};
-
-export const isMultipleOf3Or5And7 = (index: number) => {
-  return (index % 3 === 0 || index % 5 === 0) && index % 7 === 0;
-};
-
-export const multiples = () => {
+const multiples = () => {
   let multiples = {
     threeAndFive: [],
     threeOrFive: [],
@@ -27,7 +19,9 @@ export const multiples = () => {
     }
 
     if (isMultipleOf3Or5And7(index)) {
-      multiples.threeOrFiveAndSeven = multiples.threeOrFiveAndSeven.concat(index);
+      multiples.threeOrFiveAndSeven = multiples.threeOrFiveAndSeven.concat(
+        index
+      );
     }
   }
 
@@ -49,3 +43,4 @@ export const multiples = () => {
   return multiples;
 };
 
+export default multiples;
