@@ -1,4 +1,5 @@
 import CartProduct from "./cart-product";
+import Product from "./product";
 import User from "./user";
 
 class Cart {
@@ -26,6 +27,29 @@ class Cart {
     return this._cartProducts.reduce((acc, current) => {
       return acc + current.product.value * current.quantity;
     }, 0);
+  }
+
+  public addProduct(cartProduct: CartProduct) {
+    const existingCartProductIndex = this.cartProducts.findIndex(
+      (product) => cartProduct.product.name === product.product.name
+    );
+
+    if (existingCartProductIndex !== -1) {
+      return (this.cartProducts[existingCartProductIndex].quantity +=
+        cartProduct.quantity);
+    }
+
+    this.cartProducts = [...this.cartProducts, cartProduct];
+  }
+
+  public increaseProductQuantity(product: Product, quantity: number) {
+    const cartProductIndex = this.cartProducts.findIndex(
+      (cp) => cp.product.name === product.name
+    );
+
+    if (cartProductIndex === -1) throw new Error("Produto não encontrado");
+
+    this.cartProducts[cartProductIndex].quantity += quantity;
   }
 }
 

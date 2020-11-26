@@ -9,19 +9,21 @@ import User from "./user";
 jest.mock("./correios-service");
 
 const mockedCorreiosService = mocked(CorreiosService, true);
+const mockedGetCepValue = jest.fn(() => 50);
 
 describe("CEP Calculator", () => {
   let cepCalculator: CepCalculator,
     product: Product,
     cartProduct: CartProduct,
     user: User,
-    cart: Cart;
+    cart: Cart,
+    correiosService: CorreiosService;
 
   beforeEach(() => {
     mockedCorreiosService.mockClear();
     mockedCorreiosService.mockImplementation(() => {
       return {
-        getCepValue: () => 50,
+        getCepValue: mockedGetCepValue,
       };
     });
 
@@ -29,8 +31,9 @@ describe("CEP Calculator", () => {
     user = user = new User("Anderson", "49900000");
     cartProduct = new CartProduct(product, 2);
     cart = new Cart([cartProduct], user);
+    correiosService = new CorreiosService();
 
-    cepCalculator = new CepCalculator(new CorreiosService());
+    cepCalculator = new CepCalculator(correiosService);
   });
 
   test(`deve retornar o valor dos produtos acrescido de frete quando menor que '100'`, () => {
@@ -43,5 +46,6 @@ describe("CEP Calculator", () => {
 
     cart.cartProducts = [...cart.cartProducts, cartProduct];
     expect(cepCalculator.calculateShipping(cart)).toBe(160);
+    expect(mockedGetCepValue).toHaveBeenCalledTimes(1);
   });
 });

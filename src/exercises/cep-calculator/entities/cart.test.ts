@@ -23,7 +23,7 @@ describe("Cart test", () => {
 
     cartProduct1 = new CartProduct(product1, 2);
     cartProduct2 = new CartProduct(product2, 1);
-    cartProduct3 = new CartProduct(product2, 3);
+    cartProduct3 = new CartProduct(product3, 3);
   });
 
   test(`deve retornar '0' se o carrinho não tiver nenhum item`, () => {
@@ -78,5 +78,53 @@ describe("Cart test", () => {
     const cart = new Cart(cartProducts, user);
 
     expect(cart.value).toBe(200);
+  });
+
+  test(`a função 'addProduct' deve adicionar um novo produto à lista se não existir`, () => {
+    cartProducts = [cartProduct1];
+    const cart = new Cart(cartProducts, user);
+
+    expect(cart.cartProducts).toStrictEqual(cartProducts);
+
+    cart.addProduct(cartProduct2);
+
+    expect(cart.cartProducts).toStrictEqual([...cartProducts, cartProduct2]);
+  });
+
+  test(`a função 'addProduct' deve adicionar à quantidade do produto caso ele já exista`, () => {
+    cartProducts = [cartProduct1];
+    const cart = new Cart(cartProducts, user);
+
+    expect(cart.cartProducts).toStrictEqual(cartProducts);
+
+    cart.addProduct(cartProduct1);
+
+    let [product] = cartProducts;
+
+    product.quantity += cartProduct1.quantity;
+
+    expect(cart.cartProducts).toStrictEqual([product]);
+  });
+
+  test(`a função 'increaseProductQuantity' deve aumentar a quantidade de um produto pelo valor informado`, () => {
+    cartProducts = [cartProduct1];
+
+    const cart = new Cart(cartProducts, user);
+
+    expect(cart.cartProducts[0].quantity).toBe(2);
+
+    cart.increaseProductQuantity(product1, 2);
+
+    expect(cart.cartProducts[0].quantity).toBe(4);
+  });
+
+  test(`a função 'increaseProductQuantity' deve retornar um erro ao tentar adicionar um produto que não existe`, () => {
+    cartProducts = [cartProduct1];
+
+    const cart = new Cart(cartProducts, user);
+
+    expect(cart.cartProducts[0].quantity).toBe(2);
+
+    expect(() => cart.increaseProductQuantity(product2, 2)).toThrow();
   });
 });
