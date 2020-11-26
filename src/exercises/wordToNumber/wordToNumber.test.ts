@@ -67,7 +67,7 @@ describe("Testes exercício 3", () => {
       });
     });
 
-    test(`deve retornar '{isPrime: false, isHappy: false, isMultipleOf3Or5: false}' for string 'abc'`, () => {
+    test(`deve retornar '{isPrime: false, isHappy: false, isMultipleOf3Or5: true}' for string 'abc'`, () => {
       expect(wordToNumber("abc")).toStrictEqual({
         isPrime: false,
         isHappy: false,
