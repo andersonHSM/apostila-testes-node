@@ -29,27 +29,63 @@ class Cart {
     }, 0);
   }
 
-  public addProduct(cartProduct: CartProduct) {
-    const existingCartProductIndex = this.cartProducts.findIndex(
-      (product) => cartProduct.product.name === product.product.name
-    );
+  public addProducts(...cartProducts: CartProduct[]) {
+    cartProducts.forEach((cartProduct) => {
+      const existingCartProductIndex = this.serchCartProdutIndex(cartProduct);
 
-    if (existingCartProductIndex !== -1) {
-      return (this.cartProducts[existingCartProductIndex].quantity +=
-        cartProduct.quantity);
-    }
+      if (existingCartProductIndex !== -1) {
+        return (this.cartProducts[existingCartProductIndex].quantity +=
+          cartProduct.quantity);
+      }
 
-    this.cartProducts = [...this.cartProducts, cartProduct];
+      this.cartProducts = [...this.cartProducts, cartProduct];
+    });
+  }
+
+  public removeProducts(...cartProducts: CartProduct[]) {
+    cartProducts.forEach((cartProduct) => {
+      const existingCartProductIndex = this.serchCartProdutIndex(cartProduct);
+
+      if (existingCartProductIndex === -1)
+        throw new Error("CartProduct not found");
+
+      this.cartProducts.splice(existingCartProductIndex, 1);
+    });
   }
 
   public increaseProductQuantity(product: Product, quantity: number) {
+    const cartProductIndex = this.searchProductIndex(product);
+
+    this.cartProducts[cartProductIndex].quantity += quantity;
+  }
+
+  public decreaseProductQuantity(product: Product, quantity: number) {
+    const cartProductIndex = this.searchProductIndex(product);
+
+    if (this.cartProducts[cartProductIndex].quantity <= quantity) {
+      this.removeProducts(this.cartProducts[cartProductIndex]);
+      return;
+    }
+
+    this.cartProducts[cartProductIndex].quantity -= quantity;
+  }
+
+  private searchProductIndex(product: Product) {
     const cartProductIndex = this.cartProducts.findIndex(
       (cp) => cp.product.name === product.name
     );
 
     if (cartProductIndex === -1) throw new Error("Produto não encontrado");
 
-    this.cartProducts[cartProductIndex].quantity += quantity;
+    return cartProductIndex;
+  }
+
+  private serchCartProdutIndex(cartProduct: CartProduct) {
+    const existingCartProductIndex = this.cartProducts.findIndex(
+      (fnCartProduct) => cartProduct.product.name === fnCartProduct.product.name
+    );
+
+    return existingCartProductIndex;
   }
 }
 
